@@ -1,0 +1,219 @@
+/* =====================================================================
+   AgriVoice AI — lapisan gerak (motion layer)
+   Dimuat SETELAH style.css. Hanya menambah animasi, tidak mengubah tata letak.
+   Semua gerak dimatikan otomatis bila pengguna memilih "kurangi gerakan".
+   ===================================================================== */
+:root{
+  --ease-out:cubic-bezier(.22,.8,.24,1);
+  --ease-spring:cubic-bezier(.34,1.56,.64,1);
+  --glow:rgba(200,242,90,.55);
+}
+
+/* ---------- Bilah progres gulir ---------- */
+.scroll-progress{position:fixed;left:0;top:0;height:3px;width:100%;z-index:60;transform-origin:0 50%;transform:scaleX(0);
+  background:linear-gradient(90deg,#2E8050,#C8F25A,#FFD678);box-shadow:0 0 12px var(--glow);pointer-events:none}
+
+/* ---------- Transisi antar halaman ---------- */
+body{animation:page-in .7s var(--ease-out) both}
+@keyframes page-in{from{opacity:0}to{opacity:1}}
+body.leaving{opacity:0;transition:opacity .28s ease}
+
+/* ---------- Navbar ---------- */
+.navbar{animation:nav-drop .9s var(--ease-spring) .1s both;transition:background .35s,box-shadow .35s,transform .45s var(--ease-out)}
+@keyframes nav-drop{from{transform:translateY(-90px);opacity:0}to{transform:none;opacity:1}}
+.navbar.scrolled{background:rgba(10,20,14,.92);box-shadow:0 14px 40px rgba(0,0,0,.28)}
+.navbar.hide{transform:translateY(-130%)}
+.brand img{transition:transform .5s var(--ease-spring)}
+.brand:hover img{transform:scale(1.06) rotate(-1.5deg)}
+.nav-links a{position:relative;overflow:hidden}
+.nav-links a:not([aria-current]):before{content:"";position:absolute;left:50%;bottom:4px;width:0;height:2px;border-radius:2px;background:#C8F25A;transform:translateX(-50%);transition:width .35s var(--ease-out)}
+.nav-links a:not([aria-current]):hover:before{width:46%}
+.nav-links a[aria-current="page"]{animation:pill-pop .6s var(--ease-spring) .5s both}
+@keyframes pill-pop{from{transform:scale(.85);opacity:.4}to{transform:none;opacity:1}}
+.menu-toggle{transition:transform .35s var(--ease-spring),background .25s}
+.menu-toggle:active{transform:scale(.88) rotate(8deg)}
+@media(max-width:1020px){
+  .nav-links{display:flex;visibility:hidden;opacity:0;transform:translateY(-14px) scale(.97);transform-origin:top center;transition:opacity .3s,transform .4s var(--ease-spring),visibility 0s .4s}
+  .nav-links.open{visibility:visible;opacity:1;transform:none;transition:opacity .3s,transform .4s var(--ease-spring),visibility 0s}
+  .nav-links.open a{animation:link-in .5s var(--ease-out) both}
+  .nav-links.open a:nth-child(1){animation-delay:.04s}.nav-links.open a:nth-child(2){animation-delay:.08s}
+  .nav-links.open a:nth-child(3){animation-delay:.12s}.nav-links.open a:nth-child(4){animation-delay:.16s}
+  .nav-links.open a:nth-child(5){animation-delay:.2s}.nav-links.open a:nth-child(6){animation-delay:.24s}
+  .nav-links.open a:nth-child(7){animation-delay:.28s}
+}
+@keyframes link-in{from{opacity:0;transform:translateX(-18px)}to{opacity:1;transform:none}}
+
+/* ---------- Hero: cahaya hidup, teks bertahap ---------- */
+.hero,.page-hero{isolation:isolate}
+.hero:before,.page-hero:before{content:"";position:absolute;z-index:0;width:60vmax;height:60vmax;right:-18vmax;top:-26vmax;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(255,214,120,.55),rgba(255,214,120,0) 62%);animation:sun-breathe 9s ease-in-out infinite}
+@keyframes sun-breathe{0%,100%{transform:scale(1);opacity:.75}50%{transform:scale(1.14) translate(-2%,3%);opacity:1}}
+.hero-center>*,.page-hero .container>*{animation:rise-up .9s var(--ease-out) both}
+.hero-center>:nth-child(1),.page-hero .container>:nth-child(1){animation-delay:.25s}
+.hero-center>:nth-child(2),.page-hero .container>:nth-child(2){animation-delay:.4s}
+.hero-center>:nth-child(3),.page-hero .container>:nth-child(3){animation-delay:.55s}
+.hero-center>:nth-child(4),.page-hero .container>:nth-child(4){animation-delay:.7s}
+@keyframes rise-up{from{opacity:0;transform:translateY(34px);filter:blur(8px)}to{opacity:1;transform:none;filter:blur(0)}}
+.hero h1 .w{display:inline-block;opacity:0;transform:translateY(.7em) rotate(3deg);animation:word-in .8s var(--ease-spring) forwards;animation-delay:calc(.45s + var(--i)*70ms)}
+@keyframes word-in{to{opacity:1;transform:none}}
+.hero h1.split{animation:none!important;opacity:1;filter:none;transform:none}
+.eyebrow:before{animation:dot-pulse 2s ease-in-out infinite}
+@keyframes dot-pulse{0%{box-shadow:0 0 0 0 rgba(200,242,90,.7)}70%,100%{box-shadow:0 0 0 9px rgba(200,242,90,0)}}
+
+/* partikel daun/cahaya mengambang (dibuat oleh motion.js) */
+.motes{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.motes i{position:absolute;bottom:-20px;left:var(--x);width:var(--s);height:var(--s);border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.95),rgba(200,242,90,.0) 70%);opacity:0;
+  animation:mote var(--d) linear var(--dl) infinite}
+@keyframes mote{0%{transform:translate(0,0) scale(.6);opacity:0}12%{opacity:.85}80%{opacity:.5}100%{transform:translate(var(--dx),-105vh) scale(1.2);opacity:0}}
+
+/* pil kaca di hero */
+.hero-pill{animation:pill-float 5.5s ease-in-out infinite}
+.hero-pill.left{animation-name:pill-float}
+.hero-pill.right{animation-name:pill-float;animation-delay:-2.7s}
+@keyframes pill-float{0%,100%{translate:0 0}50%{translate:0 -9px}}
+.hero-pill.right svg{animation:arrow-bob 1.4s ease-in-out infinite}
+@keyframes arrow-bob{0%,100%{transform:translateY(-2px)}50%{transform:translateY(4px)}}
+@media(max-width:650px){.hero-pill.left{animation:none}}
+
+/* gelombang suara: berdenyut terus */
+.wave i{animation:wave .9s ease-out both,wave-live 1.25s ease-in-out calc(.9s + var(--n)*70ms) infinite alternate}
+@keyframes wave-live{from{transform:scaleY(.35)}to{transform:scaleY(1.05)}}
+.say .mic{position:relative;animation:mic-ring 2.2s ease-out infinite}
+@keyframes mic-ring{0%{box-shadow:0 0 0 0 rgba(200,242,90,.65)}80%,100%{box-shadow:0 0 0 16px rgba(200,242,90,0)}}
+
+/* ---------- Muncul saat digulir ---------- */
+.mo .rv{opacity:0;transform:translateY(40px) scale(.985);filter:blur(6px);
+  transition:opacity .9s var(--ease-out),transform .9s var(--ease-out),filter .9s var(--ease-out);
+  transition-delay:calc(var(--rd,0)*90ms);will-change:transform,opacity}
+.mo .rv.rv-left{transform:translateX(-46px)}
+.mo .rv.rv-right{transform:translateX(46px)}
+.mo .rv.rv-zoom{transform:scale(.9)}
+.mo .rv.in{opacity:1;transform:none;filter:blur(0)}
+
+/* ---------- Tombol: kilau, tekan, riak ---------- */
+.btn{position:relative;overflow:hidden;isolation:isolate;transition:background .25s,border-color .25s,color .25s,transform .35s var(--ease-spring),box-shadow .35s}
+.btn:before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.38) 50%,transparent 70%);transform:translateX(-130%)}
+.btn:hover:before{transform:translateX(130%);transition:transform .8s var(--ease-out)}
+.btn:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(14,27,20,.22)}
+.btn-lime:hover,.hero .btn.btn-lime:hover{box-shadow:0 12px 30px rgba(200,242,90,.45)}
+.btn:active{transform:translateY(0) scale(.96);transition-duration:.12s}
+.btn svg{transition:transform .35s var(--ease-spring)}
+.btn:hover svg{transform:translateX(4px)}
+.hero-actions .btn-lime{animation:cta-glow 3s ease-in-out 2s infinite}
+@keyframes cta-glow{0%,100%{box-shadow:0 0 0 0 rgba(200,242,90,0)}50%{box-shadow:0 0 0 10px rgba(200,242,90,.18)}}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.55);transform:scale(0);animation:ripple .65s ease-out forwards;pointer-events:none;z-index:-1}
+@keyframes ripple{to{transform:scale(4);opacity:0}}
+
+/* ---------- Kartu: angkat, miring 3D, sorot kursor ---------- */
+.card,.materi-card,.news-card,.contact-item,.demo-card,.why-item,.support-item,.fields li{transition:transform .5s var(--ease-out),box-shadow .5s,border-color .3s,background .3s}
+.card,.materi-card,.news-card,.contact-item{position:relative;transform-style:preserve-3d}
+.card:hover,.materi-card:hover,.news-card:hover,.contact-item:hover{box-shadow:0 26px 55px rgba(14,27,20,.14);border-color:#B7D3A6}
+.card:not(.tilt):hover,.materi-card:not(.tilt):hover,.news-card:not(.tilt):hover,.contact-item:hover{transform:translateY(-8px)}
+.tilt{transition:transform .15s ease-out,box-shadow .5s,border-color .3s}
+.tilt.tilting{will-change:transform}
+.spot:after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .35s;
+  background:radial-gradient(360px circle at var(--mx,50%) var(--my,50%),rgba(200,242,90,.22),transparent 60%)}
+.spot:hover:after{opacity:1}
+.card.is-key.spot:after{background:radial-gradient(360px circle at var(--mx,50%) var(--my,50%),rgba(200,242,90,.2),transparent 60%)}
+.icon-box{transition:transform .55s var(--ease-spring),background .3s,color .3s}
+.card:hover .icon-box,.contact-item:hover .icon-box{transform:rotate(-10deg) scale(1.15);background:#C8F25A;color:#0E1B14}
+.icon-box svg{transition:transform .5s var(--ease-spring)}
+.card:hover .icon-box svg{animation:icon-wiggle .7s ease}
+@keyframes icon-wiggle{30%{transform:rotate(14deg) scale(1.1)}60%{transform:rotate(-10deg)}100%{transform:none}}
+.why-item:hover,.support-item:hover{transform:translateX(8px);box-shadow:0 12px 30px rgba(14,27,20,.08)}
+.fields li{animation:field-pop .6s var(--ease-spring) both}
+.fields li:nth-child(1){animation-delay:.2s}.fields li:nth-child(2){animation-delay:.6s}
+.fields li:nth-child(3){animation-delay:1s}.fields li:nth-child(4){animation-delay:1.4s}
+@keyframes field-pop{from{opacity:0;transform:translateY(14px) scale(.92)}to{opacity:1;transform:none}}
+.fields li:hover{transform:translateY(-4px);border-color:#B7D3A6;background:#EAF7C8}
+.demo-card{animation:card-float 7s ease-in-out infinite}
+@keyframes card-float{0%,100%{translate:0 0}50%{translate:0 -8px}}
+
+/* gambar: zoom halus, tirai terbuka saat muncul */
+.about-image img,.news-thumb img,.materi-thumb img,.detail-media>img{transition:transform 1.1s var(--ease-out)}
+.about-image:hover img,.news-card:hover .news-thumb img,.materi-card:hover .materi-thumb img,.detail-media:hover>img{transform:scale(1.08)}
+/* foto: cukup fade + geser (tanpa clip-path agar foto tidak pernah tertutup) */
+.about-image img,.detail-media>img{animation:ken 18s ease-in-out infinite alternate}
+@keyframes ken{from{transform:scale(1)}to{transform:scale(1.09) translate(-1.5%,-1%)}}
+.about-image:hover img,.detail-media:hover>img{animation-play-state:paused}
+
+/* centang daftar */
+.check-list li span{transition:transform .5s var(--ease-spring),background .3s}
+.check-list li:hover span{transform:scale(1.25) rotate(-8deg);background:#C8F25A}
+.mo .check-list.in li{animation:link-in .6s var(--ease-out) both}
+.mo .check-list li{opacity:0}
+.mo .check-list.in li{opacity:1}
+.check-list li:nth-child(2){animation-delay:.15s!important}.check-list li:nth-child(3){animation-delay:.3s!important}
+.check-list li svg{stroke-dasharray:24;stroke-dashoffset:24}
+.mo .check-list.in li svg{animation:draw .7s ease .35s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.check-list:not(.rv) li svg{stroke-dashoffset:0}
+
+/* ---------- Daftar indeks beranda ---------- */
+.index a{position:relative;overflow:hidden;transition:background .3s,padding-left .45s var(--ease-out)}
+.index a:before{content:"";position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,rgba(200,242,90,.35),rgba(200,242,90,0));transition:width .5s var(--ease-out)}
+.index a:hover:before{width:100%}
+.index a:hover{padding-left:30px}
+.ix-title{transition:transform .45s var(--ease-out),color .3s}
+.index a:hover .ix-title{transform:translateX(6px)}
+.ix-go{transition:transform .5s var(--ease-spring),background .3s,color .3s}
+.index a:hover .ix-go{transform:rotate(-45deg) scale(1.12);background:#C8F25A;color:#0E1B14}
+.index>li{border-top:0}
+
+/* ---------- Langkah cara kerja: garis tumbuh, angka memantul ---------- */
+.step:not(:last-child):before{transform-origin:top;transform:scaleY(0);transition:transform 1s var(--ease-out) .25s;background:linear-gradient(#C8F25A,#CFE0CF)}
+.step.in:not(:last-child):before{transform:scaleY(1)}
+.mo .step:not(.in) .step-number{transform:scale(0) rotate(-90deg)}
+.step-number{transition:transform .7s var(--ease-spring),box-shadow .4s}
+.step:hover .step-number{transform:scale(1.14) rotate(-6deg);box-shadow:0 0 0 8px rgba(200,242,90,.35)}
+.step.in .step-number{animation:num-ping 1.1s ease-out .3s 1}
+@keyframes num-ping{0%{box-shadow:0 0 0 0 rgba(200,242,90,.9)}100%{box-shadow:0 0 0 18px rgba(200,242,90,0)}}
+.step h3{transition:color .3s,transform .4s var(--ease-out)}
+.step:hover h3{color:var(--green-600);transform:translateX(6px)}
+
+/* ---------- Layar ponsel: mengambang, saling bergantian ---------- */
+.phone{transition:transform .6s var(--ease-spring),box-shadow .6s;box-shadow:0 30px 60px rgba(0,0,0,.28)}
+.shot:nth-child(odd) .phone{animation:phone-bob 6s ease-in-out infinite}
+.shot:nth-child(even) .phone{animation:phone-bob 6s ease-in-out -3s infinite}
+@keyframes phone-bob{0%,100%{translate:0 0}50%{translate:0 -14px}}
+.shot:hover .phone,.steps-phone:hover .phone{transform:translateY(-12px) scale(1.04) rotate(-1deg)}
+.steps-phone .phone{animation:phone-bob 7s ease-in-out infinite}
+.dark{position:relative}
+.dark:before{content:"";position:absolute;left:50%;top:-20%;width:70%;height:80%;transform:translateX(-50%);pointer-events:none;
+  background:radial-gradient(ellipse,rgba(200,242,90,.16),transparent 65%);animation:aurora 10s ease-in-out infinite alternate}
+.dark>.container{position:relative}
+@keyframes aurora{from{transform:translateX(-60%) scale(.9)}to{transform:translateX(-40%) scale(1.15)}}
+
+/* ---------- CTA ---------- */
+.cta:before{content:"";position:absolute;inset:-40%;pointer-events:none;
+  background:conic-gradient(from 0deg,transparent 0 70%,rgba(200,242,90,.16) 82%,transparent 94%);animation:spin 14s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ---------- Subnav, breadcrumb, footer ---------- */
+.subnav a{transition:background .25s,border-color .25s,transform .35s var(--ease-spring),color .25s}
+.subnav a:hover{transform:translateY(-3px)}
+.subnav a[aria-current="page"]{animation:pill-pop .6s var(--ease-spring) both}
+.footer-links a{display:inline-block;transition:color .25s,transform .35s var(--ease-out)}
+.footer-links a:hover{transform:translateX(7px)}
+.footer .brand img{transition:transform .5s var(--ease-spring)}
+.footer .brand:hover img{transform:scale(1.05)}
+
+/* ---------- Tombol kembali ke atas ---------- */
+.to-top{position:fixed;right:22px;bottom:22px;z-index:40;width:50px;height:50px;border-radius:50%;border:1px solid rgba(255,255,255,.25);
+  background:rgba(10,20,14,.85);color:#C8F25A;display:grid;place-items:center;font-size:20px;cursor:pointer;backdrop-filter:blur(10px);
+  opacity:0;transform:translateY(24px) scale(.6);pointer-events:none;transition:opacity .35s,transform .5s var(--ease-spring),background .25s,color .25s}
+.to-top.show{opacity:1;transform:none;pointer-events:auto}
+.to-top:hover{background:#C8F25A;color:#0E1B14;transform:translateY(-5px) scale(1.08)}
+.to-top svg{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- Hormati preferensi "kurangi gerakan" ---------- */
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  .mo .rv{opacity:1!important;transform:none!important;filter:none!important}
+  .mo .check-list li,.mo .step:not(.in) .step-number{opacity:1!important;transform:none!important}
+  .step:not(:last-child):before{transform:none}
+  .check-list li svg{stroke-dashoffset:0}
+  .hero h1 .w{opacity:1;transform:none}
+  .motes{display:none}
+}

@@ -1,0 +1,9 @@
+# Lindungi berkas konfigurasi dan matikan daftar isi folder.
+<Files "config.php">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+</Files>
+<IfModule mod_autoindex.c>
+  IndexIgnore *
+</IfModule>

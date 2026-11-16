@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Mengenal AgriVoice AI: laporan penyuluhan lewat suara",
+    "summary": "Penjelasan singkat tentang apa itu AgriVoice AI, siapa yang memakainya, dan masalah apa yang dibantu.",
+    "image_url": "https://images.pexels.com/photos/235731/pexels-photo-235731.jpeg?auto=compress&cs=tinysrgb&w=1000",
+    "image_alt": "Petani membawa bibit padi melintasi sawah berkabut",
+    "link_url": "#",
+    "published_at": "2026-11-16"
+  },
+  {
+    "title": "Foto berstempel waktu sebagai bukti kunjungan",
+    "summary": "",
+    "image_url": "https://images.pexels.com/photos/247616/pexels-photo-247616.jpeg?auto=compress&cs=tinysrgb&w=600",
+    "image_alt": "Petani membawa bibit padi di lahan",
+    "link_url": "#",
+    "published_at": "2026-11-09"
+  },
+  {
+    "title": "Bekerja di lahan tanpa sinyal",
+    "summary": "",
+    "image_url": "https://images.pexels.com/photos/247597/pexels-photo-247597.jpeg?auto=compress&cs=tinysrgb&w=600",
+    "image_alt": "Petani membawa ikatan padi di pedesaan",
+    "link_url": "#",
+    "published_at": "2026-11-02"
+  }
+]
